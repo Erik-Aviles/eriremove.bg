@@ -10,6 +10,12 @@
       clearInterval(intervalId);
       intervalId = setInterval(() => {
         tries++;
+        const img = new Image();
+        img.src = $modifiedImage;
+        img.onload = () => {
+          processImgImage = false;
+          clearInterval(intervalId);
+        };
       }, 500);
     }
   }
@@ -17,12 +23,16 @@
 
 <two-up>
   <img src={$originalImage} alt="Imagen oringinal subida por el usuario" />
-  <img
-    on:load={() => (processImgImage = false)}
-    on:error={() => (processImgImage = true)}
-    src={`${$modifiedImage}&t=${tries}`}
-    alt="Imagen sin fonfo subida por el usuario"
-  />
+  {#if processImgImage}
+    <div class="flex flex-col justify-center items-center">
+      <p class="text-center mt-4">Procesando imagen...</p>
+    </div>
+  {:else}
+    <img
+      src={`${$modifiedImage}&t=${tries}`}
+      alt="Imagen sin fonfo subida por el usuario"
+    />
+  {/if}
 </two-up>
 
 <a
